@@ -28,6 +28,9 @@ from .take_screen_shot import take_screen_shot
 
 async def upload_dir_contents(
     dir_path: str,
+    delete_on_success: bool,
+    thumbnail_file: str,
+    force_document: bool,
     bot_sent_message: Message
 ):
     dir_contents = []
@@ -46,16 +49,34 @@ async def upload_dir_contents(
         )
 
         if os.path.isdir(current_name):
-            await upload_dir_contents(current_name, bot_sent_message)
+            await upload_dir_contents(
+                current_name,
+                delete_on_success,
+                thumbnail_file,
+                force_document,
+                bot_sent_message
+            )
 
         elif os.stat(current_name).st_size < TG_MAX_FILE_SIZE:
-            await upload_single_file(current_name, bot_sent_message)
+            response_message = await upload_single_file(
+                current_name,
+                thumbnail_file,
+                force_document,
+                bot_sent_message
+            )
+            if (
+                isinstance(response_message, Message) and
+                delete_on_success
+            ):
+                os.remove(current_name)
 
         await sleep(10)
 
 
 async def upload_single_file(
     file_path: str,
+    thumbnail_file: str,
+    force_document: bool,
     bot_sent_message: Message
 ):
     if not os.path.exists(file_path):
@@ -69,23 +90,25 @@ async def upload_single_file(
 
     if file_path.upper().endswith((
         "M4V", "MP4", "MOV", "FLV", "WMV", "3GP", "MPEG", "WEBM", "MKV"
-    )):
+    )) and not force_document:
         return await upload_as_video(
             usr_sent_message,
             bot_sent_message,
             file_path,
             caption_al_desc,
+            thumbnail_file,
             start_time
         )
 
     elif file_path.upper().endswith((
         "MP3", "M4A", "M4B", "FLAC", "WAV", "AIF", "OGG", "AAC", "DTS"
-    )):
+    )) and not force_document:
         return await upload_as_audio(
             usr_sent_message,
             bot_sent_message,
             file_path,
             caption_al_desc,
+            thumbnail_file,
             start_time
         )
 
@@ -95,6 +118,7 @@ async def upload_single_file(
             bot_sent_message,
             file_path,
             caption_al_desc,
+            thumbnail_file,
             start_time
         )
 
@@ -104,12 +128,14 @@ async def upload_as_document(
     bot_sent_message: Message,
     file_path: str,
     caption_rts: str,
+    thumbnail_file: str,
     start_time: int
 ):
     return await usr_sent_message.reply_document(
         document=file_path,
         quote=True,
         caption=caption_rts,
+        thumb=thumbnail_file,
         progress=progress_for_pyrogram,
         progress_args=(
             bot_sent_message,
@@ -124,6 +150,7 @@ async def upload_as_video(
     bot_sent_message: Message,
     file_path: str,
     caption_rts: str,
+    thumbnail_file: str,
     start_time: int
 ):
     try:
@@ -144,6 +171,7 @@ async def upload_as_video(
             bot_sent_message,
             file_path,
             caption_rts,
+            thumbnail_file,
             start_time
         )
     # thumb_nail_img = tg_thumb_form_at(thumb_nail_img)
@@ -158,7 +186,7 @@ async def upload_as_video(
     return await usr_sent_message.reply_video(
         video=file_path,
         quote=True,
-        thumb=thumb_nail_img,
+        thumb=thumb_nail_img if not thumbnail_file else thumbnail_file,
         duration=duration,
         width=width,
         height=height,
@@ -178,6 +206,7 @@ async def upload_as_audio(
     bot_sent_message: Message,
     file_path: str,
     caption_rts: str,
+    thumbnail_file: str,
     start_time: int
 ):
     metadata = extractMetadata(createParser(file_path))
@@ -208,6 +237,7 @@ async def upload_as_audio(
         duration=duration,
         performer=performer,
         title=title,
+        thumb=thumbnail_file,
         progress=progress_for_pyrogram,
         progress_args=(
             bot_sent_message,

@@ -14,8 +14,7 @@
 
 
 import os
-import shutil
-from typing import List, Union
+from typing import Union
 from .uploadgram import Uploadgram
 from .upload import upload_dir_contents
 
@@ -25,26 +24,31 @@ async def upload(
     files: str,
     to: Union[str, int],
     delete_on_success: bool = False,
-    thumbnail_file: str = None
+    thumbnail_file: str = None,
+    force_document: bool = False
 ):
     # sent a message to verify write permission in the "to"
     status_message = await uploadgram.send_message(
         chat_id=to,
         text="."
     )
-    await upload_dir_contents(files, status_message)
-    if delete_on_success:
-        shutil.rmtree(files, ignore_errors=True)
+    await upload_dir_contents(
+        files,
+        delete_on_success,
+        thumbnail_file,
+        force_document,
+        status_message,
+    )
     await status_message.delete()
 
 
 async def moin(
-    dest_chat: Union[str, int] = None,
-    dir_path: str = None
+    args
 ):
     uploadgram = Uploadgram()
     await uploadgram.start()
 
+    dest_chat = args.chat_id
     if not dest_chat:
         dest_chat = input(
             "enter chat_id to send the files to: "
@@ -55,6 +59,7 @@ async def moin(
         await uploadgram.get_chat(dest_chat)
     ).id
 
+    dir_path = args.dir_path
     if not dir_path:
         dir_path = input(
             "enter path to upload to Telegram: "
@@ -69,7 +74,10 @@ async def moin(
     await upload(
         uploadgram,
         dir_path,
-        dest_chat
+        dest_chat,
+        delete_on_success=args.delete_on_success,
+        thumbnail_file=args.t,
+        force_document=args.fd
     )
     await uploadgram.stop()
 
@@ -77,7 +85,10 @@ async def moin(
 def niom():
     import asyncio
     import argparse
-    parser = argparse.ArgumentParser(description="Upload to Telegram, from the Terminal.")
+    parser = argparse.ArgumentParser(
+        prog="UploadGram",
+        description="Upload to Telegram, from the Terminal."
+    )
     parser.add_argument(
         "chat_id",
         type=str,
@@ -88,9 +99,33 @@ def niom():
         type=str,
         help="enter path to upload to Telegram",
     )
+    parser.add_argument(
+        "--delete_on_success",
+        nargs="?",
+        type=bool,
+        help="delete file on successful upload",
+        default=False,
+        required=False
+    )
+    parser.add_argument(
+        "--fd",
+        nargs="?",
+        type=bool,
+        help="force uploading as documents",
+        default=False,
+        required=False
+    )
+    parser.add_argument(
+        "--t",
+        nargs="?",
+        type=str,
+        help="thumbnail for the upload",
+        default=None,
+        required=False
+    )
     args = parser.parse_args()
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(moin(args.chat_id, args.dir_path))
+    loop.run_until_complete(moin(args))
 
 
 if __name__ == "__main__":
