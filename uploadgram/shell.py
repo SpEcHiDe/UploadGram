@@ -82,7 +82,7 @@ async def moin(
     await uploadgram.stop()
 
 
-def niom():
+def main():
     import asyncio
     import argparse
     parser = argparse.ArgumentParser(
@@ -129,4 +129,4 @@ def niom():
 
 
 if __name__ == "__main__":
-    niom()
+    main()
