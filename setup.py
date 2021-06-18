@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Upload (and download) files to Telegram upto 2 GiB
+"""Upload files to Telegram upto 2 GiB, from the Terminal
 """
 import os
 import glob
@@ -65,6 +65,7 @@ setup(
 
     description=__doc__.replace("\n", " "),
     long_description=open(readme, "r").read(),
+    long_description_content_type="text/markdown",
     keywords=KEYWORDS,
     download_url=PACKAGE_DOWNLOAD_URL,
 
