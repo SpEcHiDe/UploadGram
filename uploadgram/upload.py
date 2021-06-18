@@ -131,10 +131,12 @@ async def upload_as_document(
     thumbnail_file: str,
     start_time: int
 ):
-    return await usr_sent_message.reply_document(
+
+    return await usr_sent_message._client.send_document(
+        chat_id=usr_sent_message.chat.id,
         document=file_path,
-        quote=True,
         caption=caption_rts,
+        force_document=True,
         thumb=thumbnail_file,
         progress=progress_for_pyrogram,
         progress_args=(
