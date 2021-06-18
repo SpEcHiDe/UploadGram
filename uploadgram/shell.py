@@ -13,7 +13,7 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-import asyncio
+import os
 import shutil
 from typing import List, Union
 from .uploadgram import Uploadgram
@@ -35,6 +35,7 @@ async def upload(
     await upload_dir_contents(files, status_message)
     if delete_on_success:
         shutil.rmtree(files, ignore_errors=True)
+    await status_message.delete()
 
 
 async def moin(
@@ -42,22 +43,39 @@ async def moin(
 ):
     uploadgram = Uploadgram()
     await uploadgram.start()
-    dir_path = input(
-        "enter path to upload to Telegram: "
-    )
+
     dest_chat = input(
         "enter chat_id to send the files to: "
     )
     if dest_chat.isnumeric():
         dest_chat = int(dest_chat)
-    dest_chat = await uploadgram.get_chat(dest_chat)
+    dest_chat = (
+        await uploadgram.get_chat(dest_chat)
+    ).id
+
+    dir_path = input(
+        "enter path to upload to Telegram: "
+    )
+    while not os.path.exists(dir_path):
+        print(os.listdir("."))
+        dir_path = input(
+            "please enter valid path to upload to Telegram: "
+        )
+    dir_path = os.path.abspath(dir_path)
     await upload(
         uploadgram,
         dir_path,
         dest_chat
     )
+    await uploadgram.stop()
 
-if __name__ == '__main__':
+
+def niom():
+    import asyncio
     import sys
     loop = asyncio.get_event_loop()
-    sys.exit(loop.run_until_complete(moin(sys.argv)))
+    loop.run_until_complete(moin(sys.argv))
+
+
+if __name__ == "__main__":
+    niom()

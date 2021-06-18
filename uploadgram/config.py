@@ -19,7 +19,7 @@ from .get_config import get_config
 
 BASE_DIR = os.path.expanduser("~/.config/uploadgram/")
 CONFIG_FILE = os.path.join(BASE_DIR, "config.ini")
-SESSION_FILE = os.path.join(BASE_DIR, "default.session")
+SESSION_FILE = os.path.join(BASE_DIR, "default")
 TG_MAX_FILE_SIZE = 2097152000
 
 
@@ -31,10 +31,13 @@ def write_default_config():
         "Go to https://my.telegram.org (or @useTGxBot) "
         "and create a app in API development tools"
     )
-    api_id = int(get_config("Please enter api_id: ", should_prompt=True))
-    api_hash = get_config("Now enter api_hash: ", should_prompt=True)
+    api_id = int(get_config("api_id ", should_prompt=True))
+    api_hash = get_config("api_hash ", should_prompt=True)
     with open(CONFIG_FILE, "w") as f:
-        f.write("[pyrogram]")
+        f.write("[pyrogram]\n")
         f.write(f"api_id = {api_id}\n")
-        f.write(f"api_hash = {api_hash}\n")
+        f.write(f"api_hash = {api_hash}\n\n")
     return CONFIG_FILE
+
+
+write_default_config()

@@ -1,2 +1,6 @@
 *.session
 config.ini
+*.egg-info
+build
+dist
+__pycache__

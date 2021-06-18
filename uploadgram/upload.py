@@ -30,9 +30,14 @@ async def upload_dir_contents(
     dir_path: str,
     bot_sent_message: Message
 ):
+    dir_contents = []
     if not os.path.isdir(dir_path):
-        return False
-    dir_contents = os.listdir(dir_path)
+        if os.path.exists(dir_path):
+            dir_contents.append(dir_path)
+        else:
+            return False
+    else:
+        dir_contents = os.listdir(dir_path)
     dir_contents.sort()
     for dir_cntn in dir_contents:
         current_name = os.path.join(
