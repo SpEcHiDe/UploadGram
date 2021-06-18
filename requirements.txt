@@ -1,0 +1,11 @@
+# to interact with Telegram APIs
+Pyrogram==1.2.9
+TgCrypto==1.2.2
+
+# get metadata from files
+hachoir==3.1.1
+
+# process(, and resize) images
+Pillow==8.0
+
+python-dotenv>=0.10
