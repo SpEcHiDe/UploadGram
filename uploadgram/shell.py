@@ -39,29 +39,33 @@ async def upload(
 
 
 async def moin(
-    args: List[str]
+    dest_chat: Union[str, int] = None,
+    dir_path: str = None
 ):
     uploadgram = Uploadgram()
     await uploadgram.start()
 
-    dest_chat = input(
-        "enter chat_id to send the files to: "
-    )
-    if dest_chat.isnumeric():
-        dest_chat = int(dest_chat)
+    if not dest_chat:
+        dest_chat = input(
+            "enter chat_id to send the files to: "
+        )
+        if dest_chat.isnumeric():
+            dest_chat = int(dest_chat)
     dest_chat = (
         await uploadgram.get_chat(dest_chat)
     ).id
 
-    dir_path = input(
-        "enter path to upload to Telegram: "
-    )
+    if not dir_path:
+        dir_path = input(
+            "enter path to upload to Telegram: "
+        )
     while not os.path.exists(dir_path):
         print(os.listdir("."))
         dir_path = input(
             "please enter valid path to upload to Telegram: "
         )
     dir_path = os.path.abspath(dir_path)
+
     await upload(
         uploadgram,
         dir_path,
@@ -72,9 +76,21 @@ async def moin(
 
 def niom():
     import asyncio
-    import sys
+    import argparse
+    parser = argparse.ArgumentParser(description="Upload to Telegram, from the Terminal.")
+    parser.add_argument(
+        "chat_id",
+        type=str,
+        help="chat id for this bot to send the message to",
+    )
+    parser.add_argument(
+        "dir_path",
+        type=str,
+        help="enter path to upload to Telegram",
+    )
+    args = parser.parse_args()
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(moin(sys.argv))
+    loop.run_until_complete(moin(args.chat_id, args.dir_path))
 
 
 if __name__ == "__main__":
