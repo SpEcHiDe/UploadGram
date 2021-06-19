@@ -28,7 +28,8 @@ class Uploadgram(Client):
             session_name=SESSION_FILE,
             config_file=CONFIG_FILE,
             parse_mode="html",
-            sleep_threshold=10
+            sleep_threshold=10,
+            no_updates=True
         )
 
     async def start(self):
