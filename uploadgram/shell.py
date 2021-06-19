@@ -25,7 +25,8 @@ async def upload(
     to: Union[str, int],
     delete_on_success: bool = False,
     thumbnail_file: str = None,
-    force_document: bool = False
+    force_document: bool = False,
+    custom_caption: str = None
 ):
     # sent a message to verify write permission in the "to"
     status_message = await uploadgram.send_message(
@@ -37,6 +38,7 @@ async def upload(
         delete_on_success,
         thumbnail_file,
         force_document,
+        custom_caption,
         status_message,
     )
     await status_message.delete()
@@ -77,7 +79,8 @@ async def moin(
         dest_chat,
         delete_on_success=args.delete_on_success,
         thumbnail_file=args.t,
-        force_document=args.fd
+        force_document=args.fd,
+        custom_caption=args.caption
     )
     await uploadgram.stop()
 
@@ -121,6 +124,14 @@ def main():
         type=str,
         help="thumbnail for the upload",
         default=None,
+        required=False
+    )
+    parser.add_argument(
+        "--caption",
+        nargs="?",
+        type=bool,
+        help="custom caption for the files, instead of default caption",
+        default=False,
         required=False
     )
     args = parser.parse_args()

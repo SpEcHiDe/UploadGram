@@ -31,6 +31,7 @@ async def upload_dir_contents(
     delete_on_success: bool,
     thumbnail_file: str,
     force_document: bool,
+    custom_caption: str,
     bot_sent_message: Message
 ):
     dir_contents = []
@@ -54,6 +55,7 @@ async def upload_dir_contents(
                 delete_on_success,
                 thumbnail_file,
                 force_document,
+                custom_caption,
                 bot_sent_message
             )
 
@@ -62,6 +64,7 @@ async def upload_dir_contents(
                 current_name,
                 thumbnail_file,
                 force_document,
+                custom_caption,
                 bot_sent_message
             )
             if (
@@ -77,6 +80,7 @@ async def upload_single_file(
     file_path: str,
     thumbnail_file: str,
     force_document: bool,
+    custom_caption: str,
     bot_sent_message: Message
 ):
     if not os.path.exists(file_path):
@@ -87,6 +91,8 @@ async def upload_single_file(
     caption_al_desc = (
         f"<code>{b_asen_am_e}</code>"
     )
+    if custom_caption:
+        caption_al_desc = custom_caption
 
     if file_path.upper().endswith((
         "M4V", "MP4", "MOV", "FLV", "WMV", "3GP", "MPEG", "WEBM", "MKV"
