@@ -129,9 +129,9 @@ def main():
     parser.add_argument(
         "--caption",
         nargs="?",
-        type=bool,
-        help="custom caption for the files, instead of default caption",
-        default=False,
+        type=str,
+        help="custom caption for the files, instead of file_name as caption",
+        default=None,
         required=False
     )
     args = parser.parse_args()
