@@ -21,9 +21,17 @@ BASE_DIR = os.path.expanduser("~/.config/uploadgram/")
 CONFIG_FILE = os.path.join(BASE_DIR, "config.ini")
 SESSION_FILE = os.path.join(BASE_DIR, "default")
 TG_MAX_FILE_SIZE = 2097152000
+TG_VIDEO_TYPES = (
+    "M4V", "MP4", "MOV", "FLV", "WMV", "3GP", "MPEG", "WEBM", "MKV"
+)
+TG_AUDIO_TYPES = (
+    "MP3", "M4A", "M4B", "FLAC", "WAV", "AIF", "OGG", "AAC", "DTS"
+)
 
 
 def write_default_config():
+    """ write the default config.ini file
+    """
     if os.path.lexists(CONFIG_FILE):
         return CONFIG_FILE
     os.makedirs(BASE_DIR, exist_ok=True)

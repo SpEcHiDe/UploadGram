@@ -15,6 +15,9 @@
 
 import os
 from time import time
+from .config import (
+    TG_VIDEO_TYPES
+)
 from .run_shell_command import run_command
 
 
@@ -28,9 +31,7 @@ async def take_screen_shot(
         output_directory,
         str(time()) + ".jpg"
     )
-    if video_file.upper().endswith((
-        "MKV", "MP4", "WEBM"
-    )):
+    if video_file.upper().endswith(TG_VIDEO_TYPES):
         file_genertor_command = [
             "ffmpeg",
             "-ss",

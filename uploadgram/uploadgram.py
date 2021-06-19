@@ -34,11 +34,10 @@ class Uploadgram(Client):
     async def start(self):
         await super().start()
         usr_bot_me = await self.get_me()
-
         print(
             f"@{usr_bot_me.username} based on Pyrogram v{__version__} started."
         )
 
     async def stop(self, *args):
         await super().stop()
-        print("Bot stopped. Bye.")
+        print("UploadGram stopped. Bye.")

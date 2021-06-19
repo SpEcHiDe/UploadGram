@@ -12,8 +12,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+""" human bytes """
+
 
 def humanbytes(size: int) -> str:
+    """ converts integer to string
+    """
     # https://stackoverflow.com/a/49361727/4723940
     # 2**10 = 1024
     if not size:

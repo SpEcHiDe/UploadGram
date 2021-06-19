@@ -21,7 +21,11 @@ from hachoir.parser import createParser
 from pyrogram.types import (
     Message
 )
-from .config import TG_MAX_FILE_SIZE
+from .config import (
+    TG_AUDIO_TYPES,
+    TG_MAX_FILE_SIZE,
+    TG_VIDEO_TYPES
+)
 from .progress import progress_for_pyrogram
 from .take_screen_shot import take_screen_shot
 
@@ -94,9 +98,7 @@ async def upload_single_file(
     if custom_caption:
         caption_al_desc = custom_caption
 
-    if file_path.upper().endswith((
-        "M4V", "MP4", "MOV", "FLV", "WMV", "3GP", "MPEG", "WEBM", "MKV"
-    )) and not force_document:
+    if file_path.upper().endswith(TG_VIDEO_TYPES) and not force_document:
         return await upload_as_video(
             usr_sent_message,
             bot_sent_message,
@@ -106,9 +108,7 @@ async def upload_single_file(
             start_time
         )
 
-    elif file_path.upper().endswith((
-        "MP3", "M4A", "M4B", "FLAC", "WAV", "AIF", "OGG", "AAC", "DTS"
-    )) and not force_document:
+    elif file_path.upper().endswith(TG_AUDIO_TYPES) and not force_document:
         return await upload_as_audio(
             usr_sent_message,
             bot_sent_message,
