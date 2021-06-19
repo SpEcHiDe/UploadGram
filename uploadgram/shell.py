@@ -55,8 +55,11 @@ async def moin(
         dest_chat = input(
             "enter chat_id to send the files to: "
         )
-        if dest_chat.isnumeric():
-            dest_chat = int(dest_chat)
+    if (
+        dest_chat.isnumeric() or
+        dest_chat.startswith("-100")
+    ):
+        dest_chat = int(dest_chat)
     dest_chat = (
         await uploadgram.get_chat(dest_chat)
     ).id

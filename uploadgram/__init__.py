@@ -17,4 +17,4 @@
 
 __author__ = """SpEcHIDe"""
 __email__ = "spechide@shrimadhavUK.me"
-__version__ = "0.1.4"
+__version__ = "0.1.5"
