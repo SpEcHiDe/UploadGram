@@ -182,7 +182,6 @@ async def upload_as_video(
             thumbnail_file,
             start_time
         )
-    # thumb_nail_img = tg_thumb_form_at(thumb_nail_img)
     try:
         metadata = extractMetadata(createParser(thumb_nail_img))
         if metadata and metadata.has("width"):
@@ -191,7 +190,7 @@ async def upload_as_video(
             height = metadata.get("height")
     except AssertionError:
         pass
-    return await usr_sent_message.reply_video(
+    _tmp_m = await usr_sent_message.reply_video(
         video=file_path,
         quote=True,
         thumb=thumb_nail_img if not thumbnail_file else thumbnail_file,
@@ -207,6 +206,12 @@ async def upload_as_video(
             "UpLoading to Telegram",
         )
     )
+    if (
+        thumb_nail_img and
+        os.path.exists(thumb_nail_img)
+    ):
+        os.remove(thumb_nail_img)
+    return _tmp_m
 
 
 async def upload_as_audio(

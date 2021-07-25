@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "uploadram"
-version = "0.1.5"
+version = "0.1.6"
 description ="Upload files to Telegram upto 2 GiB, from the Terminal"
 authors = ["Shrimadhav U K <SpEcHiDe@users.noreply.github.com>"]
 homepage = "https://github.com/SpEcHiDe/UploadGram"
