@@ -29,6 +29,7 @@ python = ">=3.8,<4"
 Pyrogram = "1.2.9"
 TgCrypto = "1.2.2"
 hachoir = "3.1.1"
+tqdm = "4.62.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

@@ -17,12 +17,8 @@
 
 import math
 from asyncio import sleep
-from pyrogram.errors import (
-    FloodWait
-)
-from pyrogram.types import (
-    Message
-)
+from pyrogram.errors import FloodWait
+from pyrogram.types import Message
 from time import time
 from .humanbytes import humanbytes
 from .time_formatter import time_formatter
@@ -33,10 +29,15 @@ async def progress_for_pyrogram(
     total: int,
     message: Message,
     sfw: int,
-    ud_type: str
+    pbar: bool,
+    ud_type: str,
 ):
     now = time()
     diff = now - sfw
+    if pbar is not None:
+        pbar.update(current)
+    if pbar and current == total:
+        pbar.set_description("uploaded")
     if round(diff % 10.00) == 0 or current == total:
         # if round(current / total * 100, 0) % 5 == 0:
         try:
@@ -56,21 +57,19 @@ async def progress_for_pyrogram(
         progress = "[{0}{1}] \nP: {2}%\n".format(
             "".join(["█" for _ in range(math.floor(percentage / 5))]),
             "".join(["░" for _ in range(20 - math.floor(percentage / 5))]),
-            round(percentage, 2))
+            round(percentage, 2),
+        )
 
         tmp = progress + "{0} of {1}\nSpeed: {2}/s\nETA: {3}\n".format(
             humanbytes(current),
             humanbytes(total),
             humanbytes(speed),
-            estimated_total_time if estimated_total_time != "" else "0 seconds"
+            estimated_total_time
+            if estimated_total_time != ""
+            else "0 seconds",
         )
         try:
-            await message.edit_text(
-                text="{}\n {}".format(
-                    ud_type,
-                    tmp
-                )
-            )
+            await message.edit_text(text="{}\n {}".format(ud_type, tmp))
         except FloodWait as e:
             await sleep(e.x)
         except:  # noqa: E722
