@@ -26,7 +26,8 @@ async def upload(
     delete_on_success: bool = False,
     thumbnail_file: str = None,
     force_document: bool = False,
-    custom_caption: str = None
+    custom_caption: str = None,
+    console_progress: bool = False
 ):
     # sent a message to verify write permission in the "to"
     status_message = await uploadgram.send_message(
@@ -40,6 +41,7 @@ async def upload(
         force_document,
         custom_caption,
         status_message,
+        console_progress
     )
     await status_message.delete()
 
@@ -83,7 +85,8 @@ async def moin(
         delete_on_success=args.delete_on_success,
         thumbnail_file=args.t,
         force_document=args.fd,
-        custom_caption=args.caption
+        custom_caption=args.caption,
+        console_progress=args.progress
     )
     await uploadgram.stop()
 
@@ -135,6 +138,15 @@ def main():
         type=str,
         help="custom caption for the files, instead of file_name as caption",
         default=None,
+        required=False
+    )
+    parser.add_argument(
+        "--progress",
+        nargs="?",
+        type=bool,
+        const=True,
+        help="show upload progress in terminal",
+        default=False,
         required=False
     )
     args = parser.parse_args()

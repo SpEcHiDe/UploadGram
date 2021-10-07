@@ -16,16 +16,11 @@
 import os
 from time import time
 from asyncio import sleep
+from tqdm import tqdm
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
-from pyrogram.types import (
-    Message
-)
-from .config import (
-    TG_AUDIO_TYPES,
-    TG_MAX_FILE_SIZE,
-    TG_VIDEO_TYPES
-)
+from pyrogram.types import Message
+from .config import TG_AUDIO_TYPES, TG_MAX_FILE_SIZE, TG_VIDEO_TYPES
 from .progress import progress_for_pyrogram
 from .take_screen_shot import take_screen_shot
 
@@ -36,7 +31,8 @@ async def upload_dir_contents(
     thumbnail_file: str,
     force_document: bool,
     custom_caption: str,
-    bot_sent_message: Message
+    bot_sent_message: Message,
+    console_progress: bool,
 ):
     dir_contents = []
     if not os.path.isdir(dir_path):
@@ -48,10 +44,7 @@ async def upload_dir_contents(
         dir_contents = os.listdir(dir_path)
     dir_contents.sort()
     for dir_cntn in dir_contents:
-        current_name = os.path.join(
-            dir_path,
-            dir_cntn
-        )
+        current_name = os.path.join(dir_path, dir_cntn)
 
         if os.path.isdir(current_name):
             await upload_dir_contents(
@@ -60,7 +53,8 @@ async def upload_dir_contents(
                 thumbnail_file,
                 force_document,
                 custom_caption,
-                bot_sent_message
+                bot_sent_message,
+                console_progress,
             )
 
         elif os.stat(current_name).st_size < TG_MAX_FILE_SIZE:
@@ -69,12 +63,10 @@ async def upload_dir_contents(
                 thumbnail_file,
                 force_document,
                 custom_caption,
-                bot_sent_message
+                bot_sent_message,
+                console_progress,
             )
-            if (
-                isinstance(response_message, Message) and
-                delete_on_success
-            ):
+            if isinstance(response_message, Message) and delete_on_success:
                 os.remove(current_name)
 
         await sleep(10)
@@ -85,18 +77,29 @@ async def upload_single_file(
     thumbnail_file: str,
     force_document: bool,
     custom_caption: str,
-    bot_sent_message: Message
+    bot_sent_message: Message,
+    console_progress: bool,
 ):
     if not os.path.exists(file_path):
         return False
     usr_sent_message = bot_sent_message
     start_time = time()
     b_asen_am_e = os.path.basename(file_path)
-    caption_al_desc = (
-        f"<code>{b_asen_am_e}</code>"
-    )
+    caption_al_desc = f"<code>{b_asen_am_e}</code>"
     if custom_caption:
         caption_al_desc = custom_caption
+
+    pbar = None
+    if console_progress:
+        pbar = tqdm(
+            total=os.path.getsize(file_path),
+            unit="iB",
+            unit_scale=True,
+            desc="uploading",
+            colour="green",
+            unit_divisor=1024,
+            miniters=1,
+        )
 
     if file_path.upper().endswith(TG_VIDEO_TYPES) and not force_document:
         return await upload_as_video(
@@ -105,7 +108,8 @@ async def upload_single_file(
             file_path,
             caption_al_desc,
             thumbnail_file,
-            start_time
+            start_time,
+            pbar,
         )
 
     elif file_path.upper().endswith(TG_AUDIO_TYPES) and not force_document:
@@ -115,7 +119,8 @@ async def upload_single_file(
             file_path,
             caption_al_desc,
             thumbnail_file,
-            start_time
+            start_time,
+            pbar,
         )
 
     else:
@@ -125,7 +130,8 @@ async def upload_single_file(
             file_path,
             caption_al_desc,
             thumbnail_file,
-            start_time
+            start_time,
+            pbar,
         )
 
 
@@ -135,7 +141,8 @@ async def upload_as_document(
     file_path: str,
     caption_rts: str,
     thumbnail_file: str,
-    start_time: int
+    start_time: int,
+    pbar: tqdm,
 ):
 
     return await usr_sent_message._client.send_document(
@@ -148,8 +155,9 @@ async def upload_as_document(
         progress_args=(
             bot_sent_message,
             start_time,
+            pbar,
             "UpLoading to Telegram",
-        )
+        ),
     )
 
 
@@ -159,7 +167,8 @@ async def upload_as_video(
     file_path: str,
     caption_rts: str,
     thumbnail_file: str,
-    start_time: int
+    start_time: int,
+    pbar: tqdm,
 ):
     try:
         metadata = extractMetadata(createParser(file_path))
@@ -171,7 +180,7 @@ async def upload_as_video(
         thumb_nail_img = await take_screen_shot(
             file_path,
             os.path.dirname(os.path.abspath(file_path)),
-            (duration / 2)
+            (duration / 2),
         )
     except AssertionError:
         return await upload_as_document(
@@ -180,7 +189,8 @@ async def upload_as_video(
             file_path,
             caption_rts,
             thumbnail_file,
-            start_time
+            start_time,
+            pbar,
         )
     try:
         metadata = extractMetadata(createParser(thumb_nail_img))
@@ -203,13 +213,11 @@ async def upload_as_video(
         progress_args=(
             bot_sent_message,
             start_time,
+            pbar,
             "UpLoading to Telegram",
-        )
+        ),
     )
-    if (
-        thumb_nail_img and
-        os.path.exists(thumb_nail_img)
-    ):
+    if thumb_nail_img and os.path.exists(thumb_nail_img):
         os.remove(thumb_nail_img)
     return _tmp_m
 
@@ -220,7 +228,8 @@ async def upload_as_audio(
     file_path: str,
     caption_rts: str,
     thumbnail_file: str,
-    start_time: int
+    start_time: int,
+    pbar: tqdm,
 ):
     metadata = extractMetadata(createParser(file_path))
     duration = 0
@@ -255,6 +264,7 @@ async def upload_as_audio(
         progress_args=(
             bot_sent_message,
             start_time,
+            pbar,
             "UpLoading to Telegram",
-        )
+        ),
     )
