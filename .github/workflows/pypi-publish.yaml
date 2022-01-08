@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - name: Install Poetry
-        run: curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+        run: curl -sSLO https://github.com/python-poetry/poetry/raw/020fb336e6da11d3a9909f30bd908437a69f13b3/get-poetry.py && python get-poetry.py --uninstall && python get-poetry.py    
       - name: Add Poetry to path
         run: echo "${HOME}/.poetry/bin" >> $GITHUB_PATH
       - name: Get Poetry version
