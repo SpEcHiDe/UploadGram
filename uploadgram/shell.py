@@ -34,6 +34,7 @@ async def upload(
         chat_id=to,
         text="."
     )
+
     await upload_dir_contents(
         files,
         delete_on_success,
@@ -43,6 +44,7 @@ async def upload(
         status_message,
         console_progress
     )
+    
     await status_message.delete()
 
 
