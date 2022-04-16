@@ -57,7 +57,7 @@ async def upload_dir_contents(
                 console_progress,
             )
 
-        elif os.stat(current_name).st_size < TG_MAX_FILE_SIZE:
+        elif os.stat(current_name).st_size <= TG_MAX_FILE_SIZE:
             response_message = await upload_single_file(
                 current_name,
                 thumbnail_file,
