@@ -35,7 +35,7 @@ async def progress_for_pyrogram(
     now = time()
     diff = now - sfw
     if pbar is not None:
-        pbar.update(current)
+        pbar.update((current / total) * 1024 * 1024)
         if current == total:
             pbar.set_description("uploaded")
     else:
