@@ -72,6 +72,6 @@ async def progress_for_pyrogram(
             try:
                 await message.edit_text(text="{}\n {}".format(ud_type, tmp))
             except FloodWait as e:
-                await sleep(e.x)
+                await sleep(e.value)
             except:  # noqa: E722
                 pass

@@ -14,13 +14,18 @@
 
 
 import os
+from dotenv import load_dotenv
 from .get_config import get_config
 
 
 BASE_DIR = os.path.expanduser("~/.config/uploadgram/")
-CONFIG_FILE = os.path.join(BASE_DIR, "config.ini")
+OLD_CONFIG_FILE = os.path.join(BASE_DIR, "config.ini")
+if os.path.exists(
+    OLD_CONFIG_FILE
+):
+    os.remove(OLD_CONFIG_FILE)
+CONFIG_FILE = os.path.join(BASE_DIR, "config.env")
 SESSION_FILE = os.path.join(BASE_DIR, "default")
-TG_MAX_FILE_SIZE = 2097152000
 TG_VIDEO_TYPES = (
     "M4V", "MP4", "MOV", "FLV", "WMV", "3GP", "MPEG", "WEBM", "MKV"
 )
@@ -33,19 +38,18 @@ def write_default_config():
     """ write the default config.ini file
     """
     if os.path.lexists(CONFIG_FILE):
-        return CONFIG_FILE
+        return load_dotenv(CONFIG_FILE)
     os.makedirs(BASE_DIR, exist_ok=True)
     print(
         "Go to https://my.telegram.org (or @useTGxBot) "
         "and create a app in API development tools"
     )
-    api_id = int(get_config("api_id ", should_prompt=True))
+    app_id = int(get_config("app_id ", should_prompt=True))
     api_hash = get_config("api_hash ", should_prompt=True)
     with open(CONFIG_FILE, "w") as f:
-        f.write("[pyrogram]\n")
-        f.write(f"api_id = {api_id}\n")
-        f.write(f"api_hash = {api_hash}\n\n")
-    return CONFIG_FILE
+        f.write(f"UG_TG_APP_ID={app_id}\n")
+        f.write(f"UG_TG_API_HASH={api_hash}\n\n")
+    return load_dotenv(CONFIG_FILE)
 
 
 write_default_config()

@@ -14,10 +14,8 @@
 
 
 from pyrogram import Client, __version__
-from .config import (
-    CONFIG_FILE,
-    SESSION_FILE
-)
+from pyrogram.enums import ParseMode
+from .get_config import get_config
 
 
 class Uploadgram(Client):
@@ -25,9 +23,11 @@ class Uploadgram(Client):
 
     def __init__(self):
         super().__init__(
-            session_name=SESSION_FILE,
-            config_file=CONFIG_FILE,
-            parse_mode="html",
+            name="UploadGram",
+            api_id=int(get_config("UG_TG_APP_ID")),
+            api_hash=get_config("UG_TG_API_HASH"),
+            in_memory=True,
+            parse_mode=ParseMode.HTML,
             sleep_threshold=10,
             no_updates=True
         )
