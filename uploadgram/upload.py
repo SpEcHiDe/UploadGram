@@ -20,12 +20,13 @@ from tqdm import tqdm
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from pyrogram.types import Message
-from .config import TG_AUDIO_TYPES, TG_MAX_FILE_SIZE, TG_VIDEO_TYPES
+from .config import TG_AUDIO_TYPES, TG_VIDEO_TYPES
 from .progress import progress_for_pyrogram
 from .take_screen_shot import take_screen_shot
 
 
 async def upload_dir_contents(
+    tg_max_file_size: int,
     dir_path: str,
     delete_on_success: bool,
     thumbnail_file: str,
@@ -48,6 +49,7 @@ async def upload_dir_contents(
 
         if os.path.isdir(current_name):
             await upload_dir_contents(
+                tg_max_file_size,
                 current_name,
                 delete_on_success,
                 thumbnail_file,
@@ -57,7 +59,7 @@ async def upload_dir_contents(
                 console_progress,
             )
 
-        elif os.stat(current_name).st_size <= TG_MAX_FILE_SIZE:
+        elif os.stat(current_name).st_size <= tg_max_file_size:
             response_message = await upload_single_file(
                 current_name,
                 thumbnail_file,

@@ -35,7 +35,11 @@ async def upload(
         text="."
     )
 
+    # get the max tg file_size that is allowed for this account
+    tg_max_file_size = 4194304000 if uploadgram.me.is_premium else 2097152000
+
     await upload_dir_contents(
+        tg_max_file_size,
         files,
         delete_on_success,
         thumbnail_file,
