@@ -26,9 +26,8 @@ class Uploadgram(Client):
             name="UploadGram",
             api_id=int(get_config("UG_TG_APP_ID")),
             api_hash=get_config("UG_TG_API_HASH"),
-            in_memory=True,
             parse_mode=ParseMode.HTML,
-            sleep_threshold=10,
+            sleep_threshold=int(get_config("UG_TG_ST", 10)),
             no_updates=True
         )
 
