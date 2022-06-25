@@ -17,4 +17,4 @@
 
 __author__ = """SpEcHIDe"""
 __email__ = "uploADGRam@shrimadhavUK.me"
-__version__ = "0.2.1"
+__version__ = "0.2.2"
