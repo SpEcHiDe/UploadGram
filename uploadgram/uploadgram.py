@@ -33,7 +33,7 @@ class Uploadgram(Client):
 
     async def start(self):
         await super().start()
-        usr_bot_me = await self.get_me()
+        usr_bot_me = self.me
         print(
             f"@{usr_bot_me.username} based on Pyrogram v{__version__} started."
         )
