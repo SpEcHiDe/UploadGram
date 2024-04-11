@@ -17,7 +17,9 @@ jobs:
       - name: Get Poetry version
         run: poetry --version
       - name: Check pyproject.toml validity
-        run: poetry check --no-interaction
+        run: |
+          poetry lock
+          poetry check --no-interaction
       - name: Setup package
         run: poetry install --no-interaction
       - run: poetry config pypi-token.pypi "${{ secrets.PYPI_TOKEN }}"
