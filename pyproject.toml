@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "uploadgram"
-version = "0.2.3"
+version = "0.3.1"
 description ="Upload files to Telegram upto 4 GiB, from the Terminal"
 authors = ["Shrimadhav U K <uploADGRam@shrimadhavUK.me>"]
 homepage = "https://github.com/SpEcHiDe/UploadGram"
@@ -27,8 +27,8 @@ classifiers = [
 [tool.poetry.dependencies]
 python = ">=3.7.7,<4"
 python-dotenv = "0.10"
-Pyrogram = "2.0.35"
-TgCrypto = "1.2.3"
+Pyrogram = { url = https://github.com/TelegramPlayGround/Pyrogram/archive/8079c1b.zip }
+TgCrypto = "1.2.5"
 hachoir = "3.1.1"
 tqdm = "4.62.3"
 

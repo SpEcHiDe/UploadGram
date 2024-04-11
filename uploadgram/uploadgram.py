@@ -14,7 +14,7 @@
 
 
 from pyrogram import Client, __version__
-from pyrogram.enums import ParseMode
+from pyrogram.enums import ParseMode, ClientPlatform
 from .get_config import get_config
 
 
@@ -28,16 +28,27 @@ class Uploadgram(Client):
             api_hash=get_config("UG_TG_API_HASH"),
             parse_mode=ParseMode.HTML,
             sleep_threshold=int(get_config("UG_TG_ST", 10)),
-            no_updates=True
+            workers=int(get_config("UG_TG_WS", 10)),
+            max_concurrent_transmissions=int(get_config("UG_TG_MCTS", 4))
+            no_updates=True,
+            device_model="Samsung SM-G998B",
+            app_version="8.4.1 (2522)",
+            system_version="SDK 31",
+            lang_pack="",
+            lang_code="en",
+            system_lang_code="en",
+            max_message_cache_size=int(get_config("UG_TG_MMC", 0)),
+            max_business_user_connection_cache_size=int(get_config("UG_TG_MBUC", 0)),
+            client_platform=ClientPlatform.ANDROID
         )
 
     async def start(self):
         await super().start()
-        usr_bot_me = self.me
         print(
-            f"@{usr_bot_me.username} based on Pyrogram v{__version__} started."
+            f"{self.me} based on Pyrogram v{__version__} started."
         )
 
     async def stop(self, *args):
+        usr_bot_me = self.me
         await super().stop()
-        print("UploadGram stopped. Bye.")
+        print(f"{usr_bot_me} stopped. Bye.")

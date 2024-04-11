@@ -69,7 +69,7 @@ async def moin(
     ):
         dest_chat = int(dest_chat)
     dest_chat = (
-        await uploadgram.get_chat(dest_chat)
+        await uploadgram.get_chat(dest_chat, False)
     ).id
 
     dir_path = args.dir_path

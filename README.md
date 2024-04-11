@@ -5,10 +5,12 @@ uploadgram uses your Telegram account to upload files up to 2GiB, from the Termi
 - Heavily inspired by the [telegram-upload](https://github.com/Nekmo/telegram-upload)
 
 - Installing:
+
 `pip install uploadgram`
 
 - Requirements:
-`pyrogram`
+
+a customized fork of `pyrogram`
 
 
 # Sample Usage

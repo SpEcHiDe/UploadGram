@@ -147,18 +147,18 @@ async def upload_as_document(
     pbar: tqdm,
 ):
 
-    return await usr_sent_message._client.send_document(
-        chat_id=usr_sent_message.chat.id,
+    return await usr_sent_message.reply_document(
         document=file_path,
+        quote=True,
         caption=caption_rts,
-        force_document=True,
+        disable_content_type_detection=True,
         thumb=thumbnail_file,
         progress=progress_for_pyrogram,
         progress_args=(
             bot_sent_message,
             start_time,
             pbar,
-            "UpLoading to Telegram",
+            f"Uploading {os.path.basename(file_path)} as <b>DOCUMENT</b>"
         ),
     )
 
@@ -216,7 +216,7 @@ async def upload_as_video(
             bot_sent_message,
             start_time,
             pbar,
-            "UpLoading to Telegram",
+            f"Uploading {os.path.basename(file_path)} as <b>VIDEO</b>"
         ),
     )
     if thumb_nail_img and os.path.exists(thumb_nail_img):
@@ -267,6 +267,6 @@ async def upload_as_audio(
             bot_sent_message,
             start_time,
             pbar,
-            "UpLoading to Telegram",
+            f"Uploading {os.path.basename(file_path)} as <b>AUDIO</b>"
         ),
     )

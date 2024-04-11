@@ -34,6 +34,7 @@ async def take_screen_shot(
     if video_file.upper().endswith(TG_VIDEO_TYPES):
         file_genertor_command = [
             "ffmpeg",
+            "-hide_banner",
             "-ss",
             str(ttl),
             "-i",

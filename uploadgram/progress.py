@@ -70,7 +70,7 @@ async def progress_for_pyrogram(
                 else "0 seconds",
             )
             try:
-                await message.edit_text(text="{}\n {}".format(ud_type, tmp))
+                await message.edit_text(text=f"{ud_type}\n {tmp}")
             except FloodWait as e:
                 await sleep(e.value)
             except:  # noqa: E722
