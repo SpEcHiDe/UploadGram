@@ -27,7 +27,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = ">=3.7.7,<4"
 python-dotenv = "0.10"
-Pyrogram = { url = https://github.com/TelegramPlayGround/Pyrogram/archive/8079c1b.zip }
+Pyrogram = { url = "https://github.com/TelegramPlayGround/Pyrogram/archive/8079c1b.zip" }
 TgCrypto = "1.2.5"
 hachoir = "3.1.1"
 tqdm = "4.62.3"
