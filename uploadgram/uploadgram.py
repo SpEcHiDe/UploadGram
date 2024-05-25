@@ -29,10 +29,10 @@ class Uploadgram(Client):
             parse_mode=ParseMode.HTML,
             sleep_threshold=int(get_config("UG_TG_ST", 10)),
             workers=int(get_config("UG_TG_WS", 10)),
-            max_concurrent_transmissions=int(get_config("UG_TG_MCTS", 4))
+            max_concurrent_transmissions=int(get_config("UG_TG_MCTS", 4)),
             no_updates=True,
             device_model="Samsung SM-G998B",
-            app_version="8.4.1 (2522)",
+            app_version="10.11.2 (4665)",
             system_version="SDK 31",
             lang_pack="",
             lang_code="en",
