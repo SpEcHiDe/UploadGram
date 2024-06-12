@@ -35,10 +35,12 @@ async def upload_dir_contents(
     bot_sent_message: Message,
     console_progress: bool,
 ):
+    file_count = 0
     dir_contents = []
     if not os.path.isdir(dir_path):
         if os.path.exists(dir_path):
             dir_contents.append(dir_path)
+            file_count += 1
         else:
             return False
     else:
