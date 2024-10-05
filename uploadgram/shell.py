@@ -27,12 +27,14 @@ async def upload(
     thumbnail_file: str = None,
     force_document: bool = False,
     custom_caption: str = None,
-    console_progress: bool = False
+    console_progress: bool = False,
+    message_thread_id: int = None,
 ):
     # sent a message to verify write permission in the "to"
     status_message = await uploadgram.send_message(
         chat_id=to,
-        text="."
+        text=".",
+        message_thread_id=message_thread_id
     )
 
     # get the max tg file_size that is allowed for this account
@@ -46,7 +48,8 @@ async def upload(
         force_document,
         custom_caption,
         status_message,
-        console_progress
+        console_progress,
+        message_thread_id
     )
     
     await status_message.delete()
@@ -92,7 +95,8 @@ async def moin(
         thumbnail_file=args.t,
         force_document=args.fd,
         custom_caption=args.caption,
-        console_progress=args.progress
+        console_progress=args.progress,
+        message_thread_id=args.topic
     )
     await uploadgram.stop()
 
@@ -153,6 +157,14 @@ def main():
         const=True,
         help="show upload progress in terminal",
         default=False,
+        required=False
+    )
+    parser.add_argument(
+        "--topic",
+        nargs="?",
+        type=int,
+        help="Unique identifier of the forum topic. This is a temporary type for uploading messages into a specific topic in a chat.",
+        default=None,
         required=False
     )
     args = parser.parse_args()

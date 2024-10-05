@@ -27,7 +27,7 @@ if os.path.exists(
 CONFIG_FILE = os.path.join(BASE_DIR, "config.env")
 SESSION_FILE = os.path.join(BASE_DIR, "default")
 TG_VIDEO_TYPES = (
-    "M4V", "MP4", "MOV", "FLV", "WMV", "3GP", "MPEG", "WEBM", "MKV"
+    "M4V", "MP4", "MOV", "FLV", "WMV", "3GP", "MPEG", "MKV"
 )
 TG_AUDIO_TYPES = (
     "MP3", "M4A", "M4B", "FLAC", "WAV", "AIF", "OGG", "AAC", "DTS"
