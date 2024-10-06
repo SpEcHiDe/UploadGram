@@ -48,8 +48,7 @@ async def upload(
         force_document,
         custom_caption,
         status_message,
-        console_progress,
-        message_thread_id
+        console_progress
     )
     
     await status_message.delete()

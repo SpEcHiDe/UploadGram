@@ -34,7 +34,6 @@ async def upload_dir_contents(
     custom_caption: str,
     bot_sent_message: Message,
     console_progress: bool,
-    message_thread_id: int = None,
 ):
     dir_contents = []
     if not os.path.isdir(dir_path):
@@ -58,7 +57,6 @@ async def upload_dir_contents(
                 custom_caption,
                 bot_sent_message,
                 console_progress,
-                message_thread_id
             )
 
         elif os.stat(current_name).st_size <= tg_max_file_size:
@@ -69,7 +67,6 @@ async def upload_dir_contents(
                 custom_caption,
                 bot_sent_message,
                 console_progress,
-                message_thread_id
             )
             if isinstance(response_message, Message) and delete_on_success:
                 os.remove(current_name)
@@ -84,7 +81,6 @@ async def upload_single_file(
     custom_caption: str,
     bot_sent_message: Message,
     console_progress: bool,
-    message_thread_id: int = None,
 ):
     if not os.path.exists(file_path):
         return False
@@ -116,7 +112,6 @@ async def upload_single_file(
             thumbnail_file,
             start_time,
             pbar,
-            message_thread_id,
         )
 
     elif file_path.upper().endswith(TG_AUDIO_TYPES) and not force_document:
@@ -128,7 +123,6 @@ async def upload_single_file(
             thumbnail_file,
             start_time,
             pbar,
-            message_thread_id,
         )
 
     else:
@@ -140,7 +134,6 @@ async def upload_single_file(
             thumbnail_file,
             start_time,
             pbar,
-            message_thread_id,
         )
 
 
@@ -152,7 +145,6 @@ async def upload_as_document(
     thumbnail_file: str,
     start_time: int,
     pbar: tqdm,
-    message_thread_id: int = None,
 ):
 
     return await usr_sent_message.reply_document(
@@ -161,7 +153,6 @@ async def upload_as_document(
         caption=caption_rts,
         disable_content_type_detection=True,
         thumb=thumbnail_file,
-        message_thread_id=message_thread_id,
         progress=progress_for_pyrogram,
         progress_args=(
             bot_sent_message,
@@ -180,7 +171,6 @@ async def upload_as_video(
     thumbnail_file: str,
     start_time: int,
     pbar: tqdm,
-    message_thread_id: int = None,
 ):
     try:
         metadata = extractMetadata(createParser(file_path))
@@ -203,7 +193,6 @@ async def upload_as_video(
             thumbnail_file,
             start_time,
             pbar,
-            message_thread_id
         )
     try:
         metadata = extractMetadata(createParser(thumb_nail_img))
@@ -222,7 +211,6 @@ async def upload_as_video(
         height=height,
         supports_streaming=True,
         caption=caption_rts,
-        message_thread_id=message_thread_id,
         progress=progress_for_pyrogram,
         progress_args=(
             bot_sent_message,
@@ -244,7 +232,6 @@ async def upload_as_audio(
     thumbnail_file: str,
     start_time: int,
     pbar: tqdm,
-    message_thread_id: int = None,
 ):
     metadata = extractMetadata(createParser(file_path))
     duration = 0
@@ -275,7 +262,6 @@ async def upload_as_audio(
         performer=performer,
         title=title,
         thumb=thumbnail_file,
-        message_thread_id=message_thread_id,
         progress=progress_for_pyrogram,
         progress_args=(
             bot_sent_message,
